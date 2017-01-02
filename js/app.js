@@ -14,7 +14,6 @@ var viewModel = function(){
     self.relatedLocations.push(location.name);
   });
 
-  self.searchLocation.extend({ rateLimit: 1000 }) //To be commented when run on production
   defaultMarkers(defaultLocations);
 
   self.searchLocation.subscribe(function(newVal){
