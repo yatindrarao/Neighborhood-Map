@@ -2,7 +2,7 @@ var viewModel = function(){
   var self = this;
   var defaultLocations = [
       {name:"Jaipur", latlng: {lat: 26.9124336, lng: 75.7872709}},
-      {name: "Bangaore", latlng: {lat: 12.9715987, lng: 77.5945627}},
+      {name: "Bangalore", latlng: {lat: 12.9715987, lng: 77.5945627}},
       {name: "Ahmedabad", latlng: {lat: 23.022505, lng: 72.5713621}},
       {name: "Mumbai", latlng: {lat: 18.5204303, lng: 73.8567437}},
       {name: "Hyderabad", latlng: {lat: 17.385044, lng: 78.486671}}
@@ -32,7 +32,7 @@ var viewModel = function(){
   });
 
   self.openInfoWindow = function(index, data){
-    var infowindow = new google.maps.InfoWindow();
+    var infowindow = new google.maps.InfoWindow(infowindowSettings);
     openMapInfoWindow(markers[index], data, infowindow);
   }
 };

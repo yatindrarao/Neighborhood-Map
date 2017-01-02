@@ -1,4 +1,5 @@
-var map, markers = [], bounds, locationNames = [];
+var map, markers = [], bounds, locationNames = [],
+    infowindowSettings = {maxWidth: 200};
 
 function initMap(){
   var india = {lat: 20.5937, lng: 78.9629};
@@ -55,12 +56,12 @@ function handleLocations(results, status) {
 function createMarker(location, content){
   var marker = new google.maps.Marker({
     position: location,
-    map: map
+    map: map,
   });
-  var infowindow = new google.maps.InfoWindow();
+  var infowindow = new google.maps.InfoWindow(infowindowSettings);
   google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
         return function() {
-          openMapInfoWindow(marker,content,infowindow);
+            openMapInfoWindow(marker,content,infowindow);
         };
     })(marker,content,infowindow));
   return marker;
@@ -89,6 +90,41 @@ function setZoom(){
 }
 
 function openMapInfoWindow(marker, content, infowindow){
-  infowindow.setContent(content);
-  infowindow.open(map,marker);
+  var contentInfo;
+  var  wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search="
+                + content;
+
+  // Sets marker animation on click
+  marker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function(){
+    marker.setAnimation(null)
+  },1000);
+
+  // Fetch more information from Wikipedia
+  var wikiRequestTimeout = setTimeout(function(){
+    alert("failed to load the wikipedia resource");
+    infowindow.setContent(content);
+    infowindow.open(map,marker);
+  }, 6000);
+
+  $.ajax({
+    url: wikiURL,
+    dataType: "jsonp",
+    success: function(response){
+      var title, details, link, htmlContent;
+      title = response[1][0];
+      details = response[2][0];
+      link = response[3][0];
+      htmlContent = '<div>'+
+            '<h3>'+ title +'</h3>'+
+            '</br>'+
+            '<p>' + details + '</p>'+
+            '</br>'+
+            '<a href="'+ link + '">'+ link + '</a>'+
+            '</div>';
+      clearTimeout(wikiRequestTimeout);
+      infowindow.setContent(htmlContent);
+      infowindow.open(map,marker);
+    }
+  });
 }
