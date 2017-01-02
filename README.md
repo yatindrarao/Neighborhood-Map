@@ -7,7 +7,7 @@ provide more information of a location.
 ### Step:1
 Take clone from github and cd into the directory.
 ```
-$ git clone github.com
+$ git clone git@github.com:yatindrarao/Neighborhood-Map.git
 $ cd Neighborhood-map
 
 ```
