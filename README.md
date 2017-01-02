@@ -19,7 +19,9 @@ You can perform search by typing in search box on top of the page.
 
 Step:3
 
-As you type in search box list of related locations will appear below. Map updates with markers. You can click on marker to get more information about the location.
+As you type in search box list of related locations will appear below. Map
+updates with markers. You can click on marker to get more information about
+the location.
 
 ## App Details
 
