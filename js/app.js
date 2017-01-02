@@ -10,17 +10,22 @@ var viewModel = function(){
   self.searchLocation = ko.observable();
   self.relatedLocations = ko.observableArray();
 
+  //Initialize model with default locations
   defaultLocations.forEach(function(location){
     self.relatedLocations.push(location.name);
   });
 
+  // Set markers for default locations
   defaultMarkers(defaultLocations);
 
+  // Watch serachLocation model for change in value
   self.searchLocation.subscribe(function(newVal){
     self.relatedLocations.removeAll();
+    // If search string length is greater than 0 update map with new markers
     if(newVal.length > 0){
       updateMap(newVal);
     }
+    // Delete all markers and initialize the app with default locations
     else{
       deleteMarkers();
       defaultMarkers(defaultLocations);
@@ -30,11 +35,13 @@ var viewModel = function(){
     }
   });
 
+  // Click on location in list view open information window on map
   self.openInfoWindow = function(index, data){
     var infowindow = new google.maps.InfoWindow(infowindowSettings);
     openMapInfoWindow(markers[index], data, infowindow);
   }
 };
 
+// For accessing ViewModel in global space
 var vm = new viewModel();
 ko.applyBindings(vm);

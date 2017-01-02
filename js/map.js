@@ -1,6 +1,7 @@
 var map, markers = [], bounds, locationNames = [],
     infowindowSettings = {maxWidth: 200};
 
+// Callback to intialize Google Map
 function initMap(){
   var india = {lat: 20.5937, lng: 78.9629};
   map = new google.maps.Map(document.getElementById('map'), {
@@ -9,10 +10,12 @@ function initMap(){
     });
 }
 
+// Initializing bound object for auto zoom in, zoom out
 function initBound(){
   bounds = new google.maps.LatLngBounds();
 }
 
+// Initialize default markers on map
 function defaultMarkers(locations){
   var preMarkers = [];
   var loc;
@@ -27,6 +30,7 @@ function defaultMarkers(locations){
   map.setCenter(bounds.getCenter());
 }
 
+// Update markers on map with latest locations
 function updateMap(searchLocation) {
   var request = {
     query: searchLocation
@@ -40,15 +44,21 @@ function handleLocations(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     var place;
     var locationMarkers = [];
+
+    // Set bound object for auto zoom in zoom out
     initBound();
     for (var i = 0; i < results.length; i++) {
       place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
       locationMarkers.push(createMarker(place, results[i].name));
       bounds.extend(place);
+      // Updates list of related locations
       vm.relatedLocations.push(results[i].name);
     }
+    // Hide all markers for new markers
     setMapOnAll(null);
+    // Display new markers
     markers = locationMarkers;
+    // Set zoom according to group of markers
     setZoom()
   }
 }
@@ -59,6 +69,7 @@ function createMarker(location, content){
     map: map,
   });
   var infowindow = new google.maps.InfoWindow(infowindowSettings);
+  // Click handler for both marker on map and location in DOM
   google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
         return function() {
             openMapInfoWindow(marker,content,infowindow);
@@ -89,24 +100,27 @@ function setZoom(){
   map.panToBounds(bounds);     // auto-center
 }
 
+// Calls MediaWiki Api for city information from Wikipedia
 function openMapInfoWindow(marker, content, infowindow){
   var contentInfo;
   var  wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search="
                 + content;
 
-  // Sets marker animation on click
+  // Sets marker animation for click event
   marker.setAnimation(google.maps.Animation.BOUNCE);
   setTimeout(function(){
     marker.setAnimation(null)
   },1000);
 
-  // Fetch more information from Wikipedia
+  // Api call
+  // If fails show alert with message and display only city name in marker
   var wikiRequestTimeout = setTimeout(function(){
     alert("failed to load the wikipedia resource");
     infowindow.setContent(content);
     infowindow.open(map,marker);
   }, 6000);
 
+  // Return wikipedia content with HTML structure
   $.ajax({
     url: wikiURL,
     dataType: "jsonp",
@@ -124,6 +138,7 @@ function openMapInfoWindow(marker, content, infowindow){
             '<p>Source: Wikipedia</p>'+
             '</br>'+
             '</div>';
+      // Clear timeout on successful call
       clearTimeout(wikiRequestTimeout);
       infowindow.setContent(htmlContent);
       infowindow.open(map,marker);
