@@ -9,9 +9,11 @@ var viewModel = function(){
     ];
   self.searchLocation = ko.observable();
   self.relatedLocations = ko.observableArray();
+
   defaultLocations.forEach(function(location){
     self.relatedLocations.push(location.name);
   });
+
   self.searchLocation.extend({ rateLimit: 1000 }) //To be commented when run on production
   defaultMarkers(defaultLocations);
 
@@ -28,6 +30,11 @@ var viewModel = function(){
       });
     }
   });
+
+  self.openInfoWindow = function(index, data){
+    var infowindow = new google.maps.InfoWindow();
+    openMapInfoWindow(markers[index], data, infowindow);
+  }
 };
 
 var vm = new viewModel();
