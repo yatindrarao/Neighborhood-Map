@@ -1,7 +1,7 @@
 var map;
 var markers = [];
 var bounds;
-
+var locationNames = [];
 function initMap(){
   var india = {lat: 20.5937, lng: 78.9629};
   map = new google.maps.Map(document.getElementById('map'), {
@@ -13,7 +13,7 @@ function initMap(){
 function initBound(){
   bounds = new google.maps.LatLngBounds();
 }
-function getLocations(locations){
+function getLatLong(locations){
   var places = [];
   var locationWithLtLg;
   var url = "https://maps.googleapis.com/maps/api/geocode/json?address=";
@@ -42,8 +42,8 @@ function defaultMarkers(locations){
   var loc;
   // console.log(bounds);
   for (var i = 0; i < locations.length; i++) {
-    preMarkers.push(createMarker(locations[i]));
-    bounds.extend(locations[i]);
+    preMarkers.push(createMarker(locations[i].latlng));
+    bounds.extend(locations[i].latlng);
   }
   markers = preMarkers;
   // console.log(bounds);
@@ -56,6 +56,28 @@ function updateMap(searchLocation) {
   service = new google.maps.places.PlacesService(map);
   service.textSearch(request, handleLocations);
 }
+
+function handleLocations(results, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+    var place;
+    var locationMarkers = [];
+    initBound();
+    for (var i = 0; i < results.length; i++) {
+      place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
+      locationMarkers.push(createMarker(place));
+      bounds.extend(place);
+      vm.relatedLocations.push(results[i].name);
+    }
+    // console.log(markers);
+    setMapOnAll(null);
+    markers = locationMarkers;
+
+    // console.log(markers);
+    setZoom()
+  }
+  // console.log(locationNames);
+}
+
 function createMarker(location){
   return new google.maps.Marker({
     position: location,
@@ -63,24 +85,6 @@ function createMarker(location){
   })
 }
 
-function handleLocations(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    var place;
-    var locationMarkers = [];
-    console.log(results.length);
-    initBound();
-    for (var i = 0; i < results.length; i++) {
-      place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-      locationMarkers.push(createMarker(place));
-      bounds.extend(place);
-    }
-    // console.log(markers);
-    setMapOnAll(null);
-    markers = locationMarkers;
-    // console.log(markers);
-    setZoom()
-  }
-}
 
 // Sets the map on all markers
 function setMapOnAll(map){
