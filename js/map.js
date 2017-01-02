@@ -8,17 +8,16 @@ function initMap(){
       center: india,
       zoom: 4
     });
-}
+};
 
 // Initializing bound object for auto zoom in, zoom out
 function initBound(){
   bounds = new google.maps.LatLngBounds();
-}
+};
 
 // Initialize default markers on map
 function defaultMarkers(locations){
-  var preMarkers = [];
-  var loc;
+  var preMarkers = [], loc;
 
   initBound();
 
@@ -28,7 +27,7 @@ function defaultMarkers(locations){
   }
   markers = preMarkers;
   map.setCenter(bounds.getCenter());
-}
+};
 
 // Update markers on map with latest locations
 function updateMap(searchLocation) {
@@ -38,12 +37,11 @@ function updateMap(searchLocation) {
 
   service = new google.maps.places.PlacesService(map);
   service.textSearch(request, handleLocations);
-}
+};
 
 function handleLocations(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
-    var place;
-    var locationMarkers = [];
+    var place, locationMarkers = [];
 
     // Set bound object for auto zoom in zoom out
     initBound();
@@ -61,7 +59,7 @@ function handleLocations(results, status) {
     // Set zoom according to group of markers
     setZoom()
   }
-}
+};
 
 function createMarker(location, content){
   var marker = new google.maps.Marker({
@@ -76,29 +74,29 @@ function createMarker(location, content){
         };
     })(marker,content,infowindow));
   return marker;
-}
+};
 
 // Sets the map on all markers
 function setMapOnAll(map){
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
-}
+};
 
 //  Removes Markers from the map, but keeps them in array
 function clearMarkers(){
   setMapOnAll(null);
-}
+};
 
 function deleteMarkers() {
   clearMarkers();
   markers = [];
-}
+};
 
 function setZoom(){
   map.fitBounds(bounds);       // auto-zoom
   map.panToBounds(bounds);     // auto-center
-}
+};
 
 // Calls MediaWiki Api for city information from Wikipedia
 function openMapInfoWindow(marker, content, infowindow){
@@ -144,4 +142,4 @@ function openMapInfoWindow(marker, content, infowindow){
       infowindow.open(map,marker);
     }
   });
-}
+};
