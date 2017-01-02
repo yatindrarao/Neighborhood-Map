@@ -26,10 +26,18 @@ function createMarker(location){
 function handleLocations(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     var place;
+    var locationMarkers = [];
+    console.log(results.length);
     for (var i = 0; i < results.length; i++) {
       place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-      markers.push(createMarker(place));
+      locationMarkers.push(createMarker(place));
+      bounds.extend(place);
     }
+    // console.log(markers);
+    setMapOnAll(null);
+    markers = locationMarkers;
+    // console.log(markers);
+    setZoom()
   }
 }
 function ViewModel(){
@@ -46,7 +54,8 @@ function ViewModel(){
   defaultMarkers(self.locations);
 
   self.searchLocation.subscribe(function(newVal){
-    deleteMarkers();
+    // deleteMarkers();
+    initBound();
     if(newVal.length > 0){
       updateMap(newVal);
     }

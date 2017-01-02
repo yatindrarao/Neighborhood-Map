@@ -1,11 +1,16 @@
 var map;
 var markers = [];
+var bounds;
+function initBound(){
+  bounds = new google.maps.LatLngBounds();
+}
 function initMap(){
   var india = {lat: 20.5937, lng: 78.9629};
   map = new google.maps.Map(document.getElementById('map'), {
       center: india,
       zoom: 5
     });
+  initBound();
 }
 // Sets the map on all markers
 function setMapOnAll(map){
@@ -20,4 +25,8 @@ function clearMarkers(){
 function deleteMarkers() {
   clearMarkers();
   markers = [];
+}
+function setZoom(){
+  map.fitBounds(bounds);       // auto-zoom
+  map.panToBounds(bounds);     // auto-center
 }
