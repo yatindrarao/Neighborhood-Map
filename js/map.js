@@ -119,8 +119,10 @@ function openMapInfoWindow(marker, content, infowindow){
             '<h3>'+ title +'</h3>'+
             '</br>'+
             '<p>' + details + '</p>'+
-            '</br>'+
             '<a href="'+ link + '">'+ link + '</a>'+
+            '</br>'+
+            '<p>Source: Wikipedia</p>'+
+            '</br>'+
             '</div>';
       clearTimeout(wikiRequestTimeout);
       infowindow.setContent(htmlContent);
