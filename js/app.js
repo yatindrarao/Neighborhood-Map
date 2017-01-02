@@ -16,12 +16,16 @@ var viewModel = function(){
   defaultMarkers(defaultLocations);
 
   self.searchLocation.subscribe(function(newVal){
-    vm.relatedLocations.removeAll();
+    self.relatedLocations.removeAll();
     if(newVal.length > 0){
       updateMap(newVal);
     }
     else{
       deleteMarkers();
+      defaultMarkers(defaultLocations);
+      defaultLocations.forEach(function(location){
+        self.relatedLocations.push(location.name);
+      });
     }
   });
 };

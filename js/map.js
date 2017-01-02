@@ -6,7 +6,7 @@ function initMap(){
   var india = {lat: 20.5937, lng: 78.9629};
   map = new google.maps.Map(document.getElementById('map'), {
       center: india,
-      zoom: 5
+      zoom: 4
     });
   // initBound();
 }
@@ -46,7 +46,7 @@ function defaultMarkers(locations){
     bounds.extend(locations[i].latlng);
   }
   markers = preMarkers;
-  // console.log(bounds);
+  map.setCenter(bounds.getCenter());
 }
 function updateMap(searchLocation) {
   var request = {
