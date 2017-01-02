@@ -1,38 +1,55 @@
-var map;
 var service;
-var infowindow;
 
-function initialize(searchLocation) {
-  var pyrmont = new google.maps.LatLng(-33.8665433,151.1956316);
-
-  map = new google.maps.Map(document.getElementById('map'), {
-      center: pyrmont,
-      zoom: 15
-    });
-
+function defaultMarkers(locations){
+  markers = locations.map(function(location, i) {
+          return new google.maps.Marker({
+            position: location,
+            map: map
+          });
+        });
+}
+function updateMap(searchLocation) {
   var request = {
     query: searchLocation
   };
 
   service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, callback);
+  service.textSearch(request, handleLocations);
+}
+function createMarker(location){
+  return new google.maps.Marker({
+    position: location,
+    map: map
+  })
 }
 
-function callback(results, status) {
+function handleLocations(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
+    var place;
     for (var i = 0; i < results.length; i++) {
-      var place = results[i];
-      // createMarker(results[i]);
-      console.log(results[i]);
+      place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
+      markers.push(createMarker(place));
     }
   }
 }
 function ViewModel(){
   var self = this;
-  this.searchLocation = ko.observable("testing");
-  this.searchLocation.extend({ rateLimit: 1000 })
-  this.searchLocation.subscribe(function(newVal){
-    initialize(newVal);
+  self.locations = [
+    {lat: 20.388794, lng: 78.120407},
+    {lat: 21.761524, lng:	70.627625},
+    {lat: 28.078636, lng: 80.471588},
+    {lat: 23.302189, lng: 81.356804},
+    {lat: 25.563322, lng: 84.869804}
+  ];
+  self.searchLocation = ko.observable();
+  self.searchLocation.extend({ rateLimit: 1000 });
+  defaultMarkers(self.locations);
+
+  self.searchLocation.subscribe(function(newVal){
+    deleteMarkers();
+    if(newVal.length > 0){
+      updateMap(newVal);
+    }
   })
 };
 
