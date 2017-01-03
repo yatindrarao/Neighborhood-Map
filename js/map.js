@@ -59,6 +59,9 @@ function handleLocations(results, status) {
     // Set zoom according to group of markers
     setZoom()
   }
+  else{
+      alert("Some error has occurred while fetching places from google");
+  }
 };
 
 function createMarker(location, content){
