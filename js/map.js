@@ -21,64 +21,7 @@ function defaultMarkers(locations){
   map.setCenter(bounds.getCenter());
 };
 
-// Update markers on map with latest locations
-// function updateMap(searchLocation) {
-//   var dfd1 = $.Deferred();
-//   var request = {
-//     query: searchLocation
-//   };
-//   service = new google.maps.places.PlacesService(map);
-//   var dfd = $.Deferred();
-//   dfd.done(function(result){
-//     return result;
-//   });
-//   // service.textSearch(request, handleLocations);
-//   service.textSearch(request, function(results, status) {
-//     if (status == google.maps.places.PlacesServiceStatus.OK) {
-//       var place;
-//
-//       // Set bound object for auto zoom in zoom out
-//       vm.relatedLocations = [];
-//
-//       for (var i = 0; i < results.length; i++) {
-//         place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-//         // Updates list of related locations
-//         vm.relatedLocations.push({name: results[i].name, latlng: place});
-//       }
-//       // console.log(vm.relatedLocations);
-//       setMarkers(vm.relatedLocations);
-//       dfd.resolve(vm.relatedLocations);
-//     }
-//     else{
-//         alert("Some error has occurred while fetching places from google");
-//         dfd.resolve([]);
-//     }
-//   });
-//   return dfd.promise();
-// };
-
-// function handleLocations(results, status) {
-//   if (status == google.maps.places.PlacesServiceStatus.OK) {
-//     var place;
-//
-//     // Set bound object for auto zoom in zoom out
-//     vm.relatedLocations = [];
-//
-//     for (var i = 0; i < results.length; i++) {
-//       place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-//       // Updates list of related locations
-//       vm.relatedLocations.push({name: results[i].name, latlng: place});
-//     }
-//     // console.log(vm.relatedLocations);
-//     setMarkers(vm.relatedLocations);
-//     return vm.relatedLocations;
-//   }
-//   else{
-//       alert("Some error has occurred while fetching places from google");
-//       return [];
-//   }
-// };
-
+// Create markers for locations passed to it
 function setMarkers(locations){
    var place, locationMarkers = [];
    initBound();
@@ -118,11 +61,6 @@ function setMapOnAll(map){
 //  Removes Markers from the map, but keeps them in array
 function clearMarkers(){
   setMapOnAll(null);
-};
-
-function deleteMarkers() {
-  clearMarkers();
-  markers = [];
 };
 
 function setZoom(){
