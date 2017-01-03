@@ -1,4 +1,4 @@
-var map, markers = [], bounds, locationNames = [],
+var map, markers = [], bounds, locationNames = [], infowindow,
     infowindowSettings = {maxWidth: 200};
 
 // Callback to intialize Google Map
@@ -8,6 +8,7 @@ function initMap(){
       center: india,
       zoom: 4
     });
+  infowindow = new google.maps.InfoWindow(infowindowSettings);  
 };
 
 // Initializing bound object for auto zoom in, zoom out
@@ -69,13 +70,11 @@ function createMarker(location, content){
     position: location,
     map: map,
   });
-  var infowindow = new google.maps.InfoWindow(infowindowSettings);
+
   // Click handler for both marker on map and location in DOM
-  google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
-        return function() {
-            openMapInfoWindow(marker,content,infowindow);
-        };
-    })(marker,content,infowindow));
+  marker.addListener('click', function(){
+      openMapInfoWindow(marker,content);
+    });
   return marker;
 };
 
@@ -102,7 +101,7 @@ function setZoom(){
 };
 
 // Calls MediaWiki Api for city information from Wikipedia
-function openMapInfoWindow(marker, content, infowindow){
+function openMapInfoWindow(marker, content){
   var contentInfo;
   var  wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search="
                 + content;
@@ -118,7 +117,7 @@ function openMapInfoWindow(marker, content, infowindow){
   var wikiRequestTimeout = setTimeout(function(){
     alert("failed to load the wikipedia resource");
     infowindow.setContent(content);
-    infowindow.open(map,marker);
+    infowindow.open(map, marker);
   }, 6000);
 
   // Return wikipedia content with HTML structure

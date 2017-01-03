@@ -37,8 +37,7 @@ var viewModel = function(){
 
   // Click on location in list view open information window on map
   self.openInfoWindow = function(index, data){
-    var infowindow = new google.maps.InfoWindow(infowindowSettings);
-    openMapInfoWindow(markers[index], data, infowindow);
+    openMapInfoWindow(markers[index], data);
   }
 };
 
