@@ -38,7 +38,7 @@ function updateMap(searchLocation) {
       var place;
 
       // Set bound object for auto zoom in zoom out
-      vm.relatedLocations.removeAll();
+      vm.relatedLocations = [];
 
       for (var i = 0; i < results.length; i++) {
         place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
@@ -46,8 +46,8 @@ function updateMap(searchLocation) {
         vm.relatedLocations.push({name: results[i].name, latlng: place});
       }
       // console.log(vm.relatedLocations);
-      setMarkers(vm.relatedLocations());
-      dfd.resolve(vm.relatedLocations());
+      setMarkers(vm.relatedLocations);
+      dfd.resolve(vm.relatedLocations);
     }
     else{
         alert("Some error has occurred while fetching places from google");

@@ -17,24 +17,24 @@ var viewModel = function(){
       {name: "Hyderabad", latlng: {lat: 17.385044, lng: 78.486671}}
     ];
   self.searchLocation = ko.observable();
-  self.relatedLocations = ko.observableArray();
+  self.relatedLocations = [];
 
 
   //Initialize model with default locations
-  self.relatedLocations(defaultLocations);
+  self.relatedLocations = defaultLocations;
 
   self.filteredList = ko.computed(function(){
     var query = self.searchLocation();
     var filtered;
     if (!query) {
-      self.relatedLocations(defaultLocations);
-      // setMarkers(self.relatedLocations());
-      return self.relatedLocations();
+      self.relatedLocations = defaultLocations;
+      // setMarkers(self.relatedLocations);
+      return self.relatedLocations;
     }
     else{
       var filtered = [];
       query = query.toLowerCase();
-      filtered = ko.utils.arrayFilter(self.relatedLocations(), function(location) {
+      filtered = ko.utils.arrayFilter(self.relatedLocations, function(location) {
            return stringHas(location.name.toLowerCase(), query);
        });
        if(filtered.length > 0){
@@ -43,10 +43,9 @@ var viewModel = function(){
        }
        else{
          updateMap(query).done(function(result){
-          //  console.log(result);
+           console.log(result);
            return result;
          });
-        //  return [{name: "hello testin"}]
        }
     }
   });
@@ -70,7 +69,7 @@ var viewModel = function(){
 
   // Click on location in list view open information window on map
   self.openInfoWindow = function(index, data){
-    openMapInfoWindow(markers[index], data);
+    openMapInfoWindow(markers[index], data.name);
   }
 };
 
