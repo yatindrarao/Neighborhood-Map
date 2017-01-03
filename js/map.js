@@ -8,7 +8,7 @@ function initMap(){
       center: india,
       zoom: 4
     });
-  infowindow = new google.maps.InfoWindow(infowindowSettings);  
+  infowindow = new google.maps.InfoWindow(infowindowSettings);
 };
 
 // Initializing bound object for auto zoom in, zoom out
@@ -113,35 +113,31 @@ function openMapInfoWindow(marker, content){
   },1000);
 
   // Api call
-  // If fails show alert with message and display only city name in marker
-  var wikiRequestTimeout = setTimeout(function(){
-    alert("failed to load the wikipedia resource");
-    infowindow.setContent(content);
-    infowindow.open(map, marker);
-  }, 6000);
-
   // Return wikipedia content with HTML structure
   $.ajax({
     url: wikiURL,
-    dataType: "jsonp",
-    success: function(response){
-      var title, details, link, htmlContent;
-      title = response[1][0];
-      details = response[2][0];
-      link = response[3][0];
-      htmlContent = '<div>'+
-            '<h3>'+ title +'</h3>'+
-            '</br>'+
-            '<p>' + details + '</p>'+
-            '<a href="'+ link + '">'+ link + '</a>'+
-            '</br>'+
-            '<p>Source: Wikipedia</p>'+
-            '</br>'+
-            '</div>';
-      // Clear timeout on successful call
-      clearTimeout(wikiRequestTimeout);
-      infowindow.setContent(htmlContent);
-      infowindow.open(map,marker);
-    }
+    dataType: "jsonp"
+  })
+  .done(function(response){
+    var title, details, link, htmlContent;
+    title = response[1][0];
+    details = response[2][0];
+    link = response[3][0];
+    htmlContent = '<div>'+
+          '<h3>'+ title +'</h3>'+
+          '</br>'+
+          '<p>' + details + '</p>'+
+          '<a href="'+ link + '">'+ link + '</a>'+
+          '</br>'+
+          '<p>Source: Wikipedia</p>'+
+          '</br>'+
+          '</div>';
+    infowindow.setContent(htmlContent);
+    infowindow.open(map,marker);
+  })
+  .fail(function(error){
+    alert("failed to load the wikipedia resource");
+    infowindow.setContent(content);
+    infowindow.open(map, marker);
   });
 };
