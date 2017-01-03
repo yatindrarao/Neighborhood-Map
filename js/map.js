@@ -23,37 +23,76 @@ function defaultMarkers(locations){
 
 // Update markers on map with latest locations
 function updateMap(searchLocation) {
+  var dfd1 = $.Deferred();
   var request = {
     query: searchLocation
   };
-
   service = new google.maps.places.PlacesService(map);
-  service.textSearch(request, handleLocations);
+  var dfd = $.Deferred();
+  dfd.done(function(result){
+    return result;
+  });
+  // service.textSearch(request, handleLocations);
+  service.textSearch(request, function(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      var place;
+
+      // Set bound object for auto zoom in zoom out
+      vm.relatedLocations.removeAll();
+
+      for (var i = 0; i < results.length; i++) {
+        place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
+        // Updates list of related locations
+        vm.relatedLocations.push({name: results[i].name, latlng: place});
+      }
+      // console.log(vm.relatedLocations);
+      setMarkers(vm.relatedLocations());
+      dfd.resolve(vm.relatedLocations());
+    }
+    else{
+        alert("Some error has occurred while fetching places from google");
+        dfd.resolve([]);
+    }
+  });
+  return dfd.promise();
 };
 
-function handleLocations(results, status) {
-  if (status == google.maps.places.PlacesServiceStatus.OK) {
-    var place, locationMarkers = [];
+// function handleLocations(results, status) {
+//   if (status == google.maps.places.PlacesServiceStatus.OK) {
+//     var place;
+//
+//     // Set bound object for auto zoom in zoom out
+//     vm.relatedLocations = [];
+//
+//     for (var i = 0; i < results.length; i++) {
+//       place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
+//       // Updates list of related locations
+//       vm.relatedLocations.push({name: results[i].name, latlng: place});
+//     }
+//     // console.log(vm.relatedLocations);
+//     setMarkers(vm.relatedLocations);
+//     return vm.relatedLocations;
+//   }
+//   else{
+//       alert("Some error has occurred while fetching places from google");
+//       return [];
+//   }
+// };
 
-    // Set bound object for auto zoom in zoom out
-    initBound();
-    for (var i = 0; i < results.length; i++) {
-      place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-      locationMarkers.push(createMarker(place, results[i].name));
-      bounds.extend(place);
-      // Updates list of related locations
-      vm.relatedLocations.push(results[i].name);
-    }
-    // Hide all markers for new markers
-    setMapOnAll(null);
-    // Display new markers
-    markers = locationMarkers;
-    // Set zoom according to group of markers
-    setZoom()
-  }
-  else{
-      alert("Some error has occurred while fetching places from google");
-  }
+function setMarkers(locations){
+   var place, locationMarkers = [];
+   initBound();
+   for (var i = 0; i < locations.length; i++) {
+     place = locations[i];
+     locationMarkers.push(createMarker(place.latlng, place.name));
+     bounds.extend(place.latlng);
+   }
+   // Hide all markers for new markers
+   setMapOnAll(null);
+   // Display new markers
+   markers = locationMarkers;
+   // Set zoom according to group of markers
+   setZoom();
 };
 
 function createMarker(location, content){

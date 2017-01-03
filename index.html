@@ -19,8 +19,8 @@
       </div>
       <div class="row">
         <div class="col-md-2">
-          <ul class="list-group" data-bind="foreach: relatedLocations">
-            <li class="list-group-item" data-bind="text: $data, click: $parent.openInfoWindow.bind($data, $index())"></li>
+          <ul class="list-group" data-bind="foreach: filteredList">
+            <li class="list-group-item" data-bind="text: name, click: $parent.openInfoWindow.bind(name, $index())"></li>
           </ul>
         </div>
         <div class="col-md-10">

@@ -1,3 +1,11 @@
+function stringHas(string, contains){
+  if(contains.length > string.length)
+    return false;
+  else{
+    return string.indexOf(contains) > -1;
+
+  }
+}
 var defaultLocations;
 var viewModel = function(){
   var self = this;
@@ -11,27 +19,54 @@ var viewModel = function(){
   self.searchLocation = ko.observable();
   self.relatedLocations = ko.observableArray();
 
+
   //Initialize model with default locations
-  defaultLocations.forEach(function(location){
-    self.relatedLocations.push(location.name);
+  self.relatedLocations(defaultLocations);
+
+  self.filteredList = ko.computed(function(){
+    var query = self.searchLocation();
+    var filtered;
+    if (!query) {
+      self.relatedLocations(defaultLocations);
+      // setMarkers(self.relatedLocations());
+      return self.relatedLocations();
+    }
+    else{
+      var filtered = [];
+      query = query.toLowerCase();
+      filtered = ko.utils.arrayFilter(self.relatedLocations(), function(location) {
+           return stringHas(location.name.toLowerCase(), query);
+       });
+       if(filtered.length > 0){
+         setMarkers(filtered);
+         return filtered;
+       }
+       else{
+         updateMap(query).done(function(result){
+          //  console.log(result);
+           return result;
+         });
+        //  return [{name: "hello testin"}]
+       }
+    }
   });
 
   // Watch serachLocation model for change in value
-  self.searchLocation.subscribe(function(newVal){
-    self.relatedLocations.removeAll();
-    // If search string length is greater than 0 update map with new markers
-    if(newVal.length > 0){
-      updateMap(newVal);
-    }
-    // Delete all markers and initialize the app with default locations
-    else{
-      deleteMarkers();
-      defaultMarkers(defaultLocations);
-      defaultLocations.forEach(function(location){
-        self.relatedLocations.push(location.name);
-      });
-    }
-  });
+  // self.searchLocation.subscribe(function(newVal){
+  //   self.relatedLocations.removeAll();
+  //   // If search string length is greater than 0 update map with new markers
+  //   if(newVal.length > 0){
+  //     updateMap(newVal);
+  //   }
+  //   // Delete all markers and initialize the app with default locations
+  //   else{
+  //     deleteMarkers();
+  //     defaultMarkers(defaultLocations);
+  //     defaultLocations.forEach(function(location){
+  //       self.relatedLocations.push(location.name);
+  //     });
+  //   }
+  // });
 
   // Click on location in list view open information window on map
   self.openInfoWindow = function(index, data){
