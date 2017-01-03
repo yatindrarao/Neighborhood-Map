@@ -1,6 +1,7 @@
+var defaultLocations;
 var viewModel = function(){
   var self = this;
-  var defaultLocations = [
+  defaultLocations = [
       {name:"Jaipur", latlng: {lat: 26.9124336, lng: 75.7872709}},
       {name: "Bangalore", latlng: {lat: 12.9715987, lng: 77.5945627}},
       {name: "Ahmedabad", latlng: {lat: 23.022505, lng: 72.5713621}},
@@ -14,9 +15,6 @@ var viewModel = function(){
   defaultLocations.forEach(function(location){
     self.relatedLocations.push(location.name);
   });
-
-  // Set markers for default locations
-  defaultMarkers(defaultLocations);
 
   // Watch serachLocation model for change in value
   self.searchLocation.subscribe(function(newVal){
@@ -39,6 +37,23 @@ var viewModel = function(){
   self.openInfoWindow = function(index, data){
     openMapInfoWindow(markers[index], data);
   }
+};
+
+// Callback to intialize Google Map
+function initMap(){
+  var india = {lat: 20.5937, lng: 78.9629};
+  map = new google.maps.Map(document.getElementById('map'), {
+      center: india,
+      zoom: 4
+    });
+  infowindow = new google.maps.InfoWindow(infowindowSettings);
+  // Set markers for default locations
+  defaultMarkers(defaultLocations);
+};
+
+// Error Handled for Google Maps API
+function googleError(){
+  alert("somer error has occurred while loading google maps api");
 };
 
 // For accessing ViewModel in global space

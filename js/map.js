@@ -1,15 +1,6 @@
 var map, markers = [], bounds, locationNames = [], infowindow,
     infowindowSettings = {maxWidth: 200};
 
-// Callback to intialize Google Map
-function initMap(){
-  var india = {lat: 20.5937, lng: 78.9629};
-  map = new google.maps.Map(document.getElementById('map'), {
-      center: india,
-      zoom: 4
-    });
-  infowindow = new google.maps.InfoWindow(infowindowSettings);
-};
 
 // Initializing bound object for auto zoom in, zoom out
 function initBound(){
