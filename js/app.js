@@ -26,9 +26,11 @@ var viewModel = function(){
   self.filteredList = ko.computed(function(){
     var query = self.searchLocation();
     var filtered;
-    if (!query) {
-      self.relatedLocations = defaultLocations;
-      // setMarkers(self.relatedLocations);
+    if (!query && self.filteredList) {
+      setMarkers(self.relatedLocations);
+      return self.relatedLocations;
+    }
+    else if(!query){
       return self.relatedLocations;
     }
     else{
@@ -41,31 +43,11 @@ var viewModel = function(){
          setMarkers(filtered);
          return filtered;
        }
-       else{
-         updateMap(query).done(function(result){
-           console.log(result);
-           return result;
-         });
-       }
+       else
+         clearMarkers();
+         return 
     }
   });
-
-  // Watch serachLocation model for change in value
-  // self.searchLocation.subscribe(function(newVal){
-  //   self.relatedLocations.removeAll();
-  //   // If search string length is greater than 0 update map with new markers
-  //   if(newVal.length > 0){
-  //     updateMap(newVal);
-  //   }
-  //   // Delete all markers and initialize the app with default locations
-  //   else{
-  //     deleteMarkers();
-  //     defaultMarkers(defaultLocations);
-  //     defaultLocations.forEach(function(location){
-  //       self.relatedLocations.push(location.name);
-  //     });
-  //   }
-  // });
 
   // Click on location in list view open information window on map
   self.openInfoWindow = function(index, data){

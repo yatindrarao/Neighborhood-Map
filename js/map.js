@@ -22,40 +22,40 @@ function defaultMarkers(locations){
 };
 
 // Update markers on map with latest locations
-function updateMap(searchLocation) {
-  var dfd1 = $.Deferred();
-  var request = {
-    query: searchLocation
-  };
-  service = new google.maps.places.PlacesService(map);
-  var dfd = $.Deferred();
-  dfd.done(function(result){
-    return result;
-  });
-  // service.textSearch(request, handleLocations);
-  service.textSearch(request, function(results, status) {
-    if (status == google.maps.places.PlacesServiceStatus.OK) {
-      var place;
-
-      // Set bound object for auto zoom in zoom out
-      vm.relatedLocations = [];
-
-      for (var i = 0; i < results.length; i++) {
-        place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
-        // Updates list of related locations
-        vm.relatedLocations.push({name: results[i].name, latlng: place});
-      }
-      // console.log(vm.relatedLocations);
-      setMarkers(vm.relatedLocations);
-      dfd.resolve(vm.relatedLocations);
-    }
-    else{
-        alert("Some error has occurred while fetching places from google");
-        dfd.resolve([]);
-    }
-  });
-  return dfd.promise();
-};
+// function updateMap(searchLocation) {
+//   var dfd1 = $.Deferred();
+//   var request = {
+//     query: searchLocation
+//   };
+//   service = new google.maps.places.PlacesService(map);
+//   var dfd = $.Deferred();
+//   dfd.done(function(result){
+//     return result;
+//   });
+//   // service.textSearch(request, handleLocations);
+//   service.textSearch(request, function(results, status) {
+//     if (status == google.maps.places.PlacesServiceStatus.OK) {
+//       var place;
+//
+//       // Set bound object for auto zoom in zoom out
+//       vm.relatedLocations = [];
+//
+//       for (var i = 0; i < results.length; i++) {
+//         place = {lat: results[i].geometry.location.lat(), lng: results[i].geometry.location.lng()};
+//         // Updates list of related locations
+//         vm.relatedLocations.push({name: results[i].name, latlng: place});
+//       }
+//       // console.log(vm.relatedLocations);
+//       setMarkers(vm.relatedLocations);
+//       dfd.resolve(vm.relatedLocations);
+//     }
+//     else{
+//         alert("Some error has occurred while fetching places from google");
+//         dfd.resolve([]);
+//     }
+//   });
+//   return dfd.promise();
+// };
 
 // function handleLocations(results, status) {
 //   if (status == google.maps.places.PlacesServiceStatus.OK) {
