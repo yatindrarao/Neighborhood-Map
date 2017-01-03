@@ -1,6 +1,10 @@
-/*Main Body  Style*/
-.main-body{
-  margin-top: 20px;
+/*Header Style*/
+.header-style{
+  margin: 15px 0;
+}
+/* Footer Style*/
+.footer-style{
+  border: none;
 }
 /* Map Style*/
 #map {
