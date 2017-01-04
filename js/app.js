@@ -26,6 +26,7 @@ var viewModel = function(){
     var query = self.searchLocation();
     var filtered;
     if (!query && self.filteredList) {
+      infowindow.close();
       setMarkers(self.relatedLocations);
       return self.relatedLocations;
     }
@@ -38,13 +39,14 @@ var viewModel = function(){
       filtered = ko.utils.arrayFilter(self.relatedLocations, function(location) {
            return stringHas(location.name.toLowerCase(), query);
        });
-       if(filtered.length > 0){
-         setMarkers(filtered);
-         return filtered;
-       }
-       else
-         clearMarkers();
-         return;
+      if(filtered.length > 0){
+        setMarkers(filtered);
+        return filtered;
+      }
+      else{
+        clearMarkers();
+        return;
+      }
     }
   });
 

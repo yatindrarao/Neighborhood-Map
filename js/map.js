@@ -21,21 +21,23 @@ function defaultMarkers(locations){
   map.setCenter(bounds.getCenter());
 };
 
-// Create markers for locations passed to it
+// Set markers on map for locations passed to it
 function setMarkers(locations){
-   var place, locationMarkers = [];
-   initBound();
-   for (var i = 0; i < locations.length; i++) {
-     place = locations[i];
-     locationMarkers.push(createMarker(place.latlng, place.name));
-     bounds.extend(place.latlng);
+  var place;
+  //  Hides all markers
+  clearMarkers();
+  initBound();
+  for (var i = 0; i < locations.length; i++) {
+   place = locations[i];
+   for (var j = 0; j < defaultLocations.length; j++) {
+     if (place == defaultLocations[j]) {
+      markers[j].setMap(map);
+      bounds.extend(place.latlng);
+      break;
+     }
    }
-   // Hide all markers for new markers
-   setMapOnAll(null);
-   // Display new markers
-   markers = locationMarkers;
-   // Set zoom according to group of markers
-   setZoom();
+  }
+  setZoom();
 };
 
 function createMarker(location, content){
